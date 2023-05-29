@@ -70,12 +70,29 @@ def combine(start, finish, layout):
 
     combined_layout.append(storageroom)
 
+     # Combine intermediate rooms
+    intermediaterooms=[]
     # Combine intermediate rooms
-    intermediateroom = [[0 for _ in range(len(layout) - len(start) - len(finish) + 2)] for _ in range(len(layout) - len(start) - len(finish))]
-    for x in range(len(intermediateroom)):
-        intermediateroom[x][-1] = sum(layout[len(start) + x])
-        combined_layout.append(intermediateroom[x])
-
+    for x in range(len(layout) - len(start) - len(finish)):
+        # print("x=",x)
+        for y in range(len(layout)):
+            # print("y=",y)    
+            if y == (len(start)-1): 
+                intermediaterooms.append(0)
+            elif len(start)<= y < (len(layout)-len(finish)):
+                # print("mid",layout[len(start)+x][y])
+                intermediaterooms.append(layout[len(start)+x][y])
+                
+            elif len(layout)-len(finish) <= y:
+                # print("last")
+                # print(intermediaterooms)
+                intermediaterooms.append(sum(layout[len(start)+x][y:]))
+                break
+                
+        combined_layout.append(intermediaterooms);
+        # print(intermediaterooms)
+        intermediaterooms=[]
+        # print(combined_layout)
     # Combine delivery rooms
     deliveryroom = [0 for _ in range(len(storageroom))]
     combined_layout.append(deliveryroom)
@@ -85,16 +102,16 @@ def combine(start, finish, layout):
 
 
 # Define the graph based on the combine_layout
-start = [0, 1]
-finish = [4, 5]
-layout = [
-    [0, 0, 4, 6, 0, 0],  # room 0: storage room
-    [0, 0, 5, 2, 0, 0],  # room 1: storage room
-    [0, 0, 0, 0, 4, 4],  # room 2: intermediate room
-    [0, 0, 0, 0, 6, 6],  # room 3: intermediate room
-    [0, 0, 0, 0, 0, 0],  # room 4: delivery room
-    [0, 0, 0, 0, 0, 0],  # room 5: delivery room
-]
+start = [0,1]
+finish = [4,5]
+layout =     [
+            [0, 0, 4, 6, 0, 0],
+            [0, 0, 5, 2, 0, 0],
+            [0, 0, 0, 0, 4, 4],
+            [0, 0, 0, 0, 6, 6],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ]
 
 combine_layout=combine(start,finish,layout)
 # print(combine_layout)
